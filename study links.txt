@@ -1,0 +1,5 @@
+http://www.vogella.com/tutorials/REST/article.html
+
+http://howtodoinjava.com/restful-web-service/
+
+http://www.mkyong.com/tutorials/jax-rs-tutorials/

@@ -1,0 +1,57 @@
+There are 2 ways in which content negotiation can be implemented.
+
+1. By using multiple media types which you want to support under @Produces & @Consumes annotations at class level as - 
+
+@Path(value="/messages")
+@Produces(value={MediaType.APPLICATION_JSON, MediaType.TEXT_XML})
+@Consumes(value={MediaType.APPLICATION_JSON, MediaType.TEXT_XML})
+public class MessageResource {
+	
+	// Sends response either as JSON or XML depending on Accept header.
+	@GET
+	@Path(value="/{msgId}")
+	public Message getMessage(@PathParam(value="msgId") long id, @Context UriInfo uriInfo) {
+		......
+	}
+
+
+	// Accepts payload either as JSON or XML depending on Content-Type header.
+	// Sends response either as JSON or XML depending on Accept header.
+	@POST
+	public Response addMessage(Message message, @Context UriInfo uriInfo) {
+		......
+	}
+}
+
+2. By having separate method for each media type as-
+
+@Path(value="/messages")
+
+public class MessageResource {
+	@GET
+	@Path(value="/{msgId}")
+	@Produces(value=MediaType.APPLICATION_JSON)		// Send response as JSON.
+	public Message getMessageAsJSON(@PathParam(value="msgId") long id, @Context UriInfo uriInfo) {
+		......
+	}
+
+	@Produces(value=MediaType.TEXT_XML)				// Send response as XML.
+	public Message getMessageAsXML(@PathParam(value="msgId") long id, @Context UriInfo uriInfo) {
+		......
+	}
+
+
+	@POST
+	@Consumes(value=MediaType.APPLICATION_JSON)							// Accepts payload as JSON.
+	@Produces(value={MediaType.APPLICATION_JSON, MediaType.TEXT_XML})	// Send response either as JSON or XML depending on Accept header.
+	public Response addMessagePayloadAsJSON(Message message, @Context UriInfo uriInfo) {
+		......
+	}
+
+	@POST
+	@Consumes(value=MediaType.TEXT_XML)									// Accepts payload as XML.
+	@Produces(value={MediaType.APPLICATION_JSON, MediaType.TEXT_XML})	// Send response either as JSON or XML depending on Accept header.
+	public Response addMessagePayloadAsXML(Message message, @Context UriInfo uriInfo) {
+		......
+	}
+}
